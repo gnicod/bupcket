@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/gnicod/bupcket";
+option go_package = "github.com/gnicod/bupcketpb";
 
 package bupcket;
 
