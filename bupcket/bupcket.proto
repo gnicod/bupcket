@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option go_package = "github.com/gnicod/bupcket";
+
+package bupcket;
+
+// The greeting service definition.
+service Upload {
+  // Sends a greeting
+  rpc Send (UploadRequest) returns (UploadReply) {}
+}
+
+// The request message containing the user's name.
+message UploadRequest {
+  string file = 1;
+}
+
+// The response message containing the greetings
+message UploadReply {
+  string url = 1;
+}
