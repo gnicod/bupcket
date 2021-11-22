@@ -3,6 +3,7 @@ module github.com/gnicod/bupcket
 go 1.16
 
 require (
-	google.golang.org/grpc v1.40.0 // indirect
-	google.golang.org/protobuf v1.25.0 // indirect
+	github.com/google/uuid v1.3.0 // indirect
+	github.com/spf13/cobra v1.2.1 // indirect
+	github.com/spf13/viper v1.8.1 // indirect
 )
