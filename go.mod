@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/google/uuid v1.3.0 // indirect
+	github.com/kataras/iris/v12 v12.1.8 // indirect
 	github.com/spf13/cobra v1.2.1 // indirect
 	github.com/spf13/viper v1.8.1 // indirect
 )

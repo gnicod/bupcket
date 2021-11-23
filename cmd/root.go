@@ -18,6 +18,9 @@ package cmd
 import (
 	"fmt"
 	"os"
+
+	"github.com/gnicod/bupcket/api"
+
 	"github.com/spf13/cobra"
 
 	"github.com/spf13/viper"
@@ -44,6 +47,8 @@ to quickly create a Cobra application.`,
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	cobra.CheckErr(rootCmd.Execute())
+	app := api.NewApp()
+	app.Run()
 }
 
 func init() {
