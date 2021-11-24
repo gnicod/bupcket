@@ -9,5 +9,5 @@ type UploadRequest struct {
 }
 
 type Provider interface {
-	Upload(UploadRequest)
+	Upload(UploadRequest) (string, error)
 }

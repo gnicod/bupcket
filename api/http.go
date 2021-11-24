@@ -1,11 +1,11 @@
 package api
 
 import (
-	"fmt"
-	"io/ioutil"
 	"log"
+	"os"
 
 	"github.com/gnicod/bupcket/storage"
+	"github.com/google/uuid"
 	"github.com/kataras/iris/v12"
 )
 
@@ -23,39 +23,23 @@ func NewApp(storageProvider storage.Provider) *App {
 }
 
 func (app *App) Upload(ctx iris.Context) {
-    file, info, err := ctx.FormFile("file")
+    _, info, err := ctx.FormFile("file")
     if err != nil {
         ctx.StatusCode(iris.StatusInternalServerError)
         ctx.JSON("Error while uploading")
         return
     }
-    defer file.Close()
-    fn := info.Filename
-    ctx.Writef("File Name: " + fn)
-	defer file.Close()
-	fmt.Printf("Uploaded File: %+v\n", info.Filename)
-	fmt.Printf("File Size: %+v\n", info.Size)
-	fmt.Printf("MIME Header: %+v\n", info.Header)
-
-	// Create a temporary file within our temp-images directory that follows
-	// a particular naming pattern
-	tempFile, err := ioutil.TempFile("/tmp/", "upload-*.png")
+	f, _ := os.Open(info.Filename)
+    defer f.Close()
+	path, err := app.storageProvider.Upload(storage.UploadRequest{
+		Bucket: "walkguide", // TODO from conf
+		Key: uuid.NewString(),
+		Body: *f,
+	})
 	if err != nil {
-		fmt.Println(err)
+		ctx.JSON("fail")
 	}
-	defer tempFile.Close()
-
-	// read all of the contents of our uploaded file into a
-	// byte array
-	fileBytes, err := ioutil.ReadAll(file)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// write this byte array to our temporary file
-	tempFile.Write(fileBytes)
-	// return that we have successfully uploaded our file!
-	ctx.JSON("ok")
-	app.storageProvider.Upload(storage.UploadRequest{})
+	 ctx.JSON(path)
 }
 
 // Run starts the APIs
