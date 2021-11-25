@@ -1,8 +1,6 @@
 package storage
 
 import (
-	"fmt"
-	"io/ioutil"
 	"log"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -15,12 +13,6 @@ type S3Provider struct {
 }
 
 func (s S3Provider) Upload(request UploadRequest) (string, error){
-	// TODO send file to s3
-	fmt.Println(request.Key)
-	fmt.Println("TODO upload to s3")
-	path := "path"+request.Key
-	b, _ := ioutil.ReadFile(request.Body.Name()) 
-	fmt.Println(string(b))
 	_, err := s3.New(s.session).PutObject(&s3.PutObjectInput{
 		Bucket:             aws.String(request.Bucket),
 		Key:                aws.String(request.Key),
@@ -31,6 +23,7 @@ func (s S3Provider) Upload(request UploadRequest) (string, error){
 		// ContentType:        aws.String(http.DetectContentType(buffer)),
 		// ServerSideEncryption: aws.String("AES256"),
 	})
+	path := "https://"+request.Bucket+".s3.eu-west-3.amazonaws.com/" + request.Key
 	return path, err
 }
 
