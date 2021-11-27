@@ -42,15 +42,16 @@ func (app *App) Upload(ctx iris.Context) {
 	}
 	f, _ := os.Open(info.Filename)
 	defer f.Close()
-	path, err := app.storageProvider.Upload(storage.UploadRequest{
+	response, err := app.storageProvider.Upload(storage.UploadRequest{
 		Bucket: config.Bucket,
 		Key:    uuid.NewString(),
 		Body:   *f,
 	})
 	if err != nil {
 		ctx.JSON(error.CONFIG_NOT_FOUND)
+		return
 	}
-	ctx.JSON(path)
+	ctx.JSON(response)
 }
 
 // Run starts the APIs
