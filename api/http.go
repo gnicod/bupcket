@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/gnicod/bupcket/api/error"
 	"github.com/gnicod/bupcket/config"
 
 	"github.com/gnicod/bupcket/storage"
@@ -28,10 +29,15 @@ func NewApp(storageProvider storage.Provider) *App {
 func (app *App) Upload(ctx iris.Context) {
 	_, info, err := ctx.FormFile("file")
 	tag := ctx.URLParam("tag")
+	if err != nil {
+		ctx.StatusCode(iris.StatusBadRequest)
+		ctx.JSON(error.MISSING_FILE)
+		return
+	}
 	config, err := config.NewTagConfig(tag)
 	if err != nil {
-		ctx.StatusCode(iris.StatusInternalServerError)
-		ctx.JSON("Error while uploading")
+		ctx.StatusCode(iris.StatusBadRequest)
+		ctx.JSON(error.CONFIG_NOT_FOUND)
 		return
 	}
 	f, _ := os.Open(info.Filename)
@@ -42,7 +48,7 @@ func (app *App) Upload(ctx iris.Context) {
 		Body:   *f,
 	})
 	if err != nil {
-		ctx.JSON("fail")
+		ctx.JSON(error.CONFIG_NOT_FOUND)
 	}
 	ctx.JSON(path)
 }
