@@ -53,6 +53,7 @@ func Execute() {
 }
 
 func init() {
+	initConfig()
 	cobra.OnInitialize(initConfig)
 
 	// Here you will define your flags and configuration settings.
@@ -80,6 +81,8 @@ func initConfig() {
 		viper.AddConfigPath(home)
 		viper.SetConfigType("yaml")
 		viper.SetConfigName(".bupcket")
+		p := viper.GetString("name")
+		println("name " + p)
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
