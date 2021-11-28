@@ -2,11 +2,13 @@
 tags:
   audio:
     bucket: walkguide
+    folder: audio
     mimetypes:
       - audio/mpeg
       - audio/mp3
   img:
     bucket: walkguide
+    folder: img
     mimetypes:
       - image/jpeg
       - image/gif
