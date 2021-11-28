@@ -1,11 +1,9 @@
 package storage
 
-import "os"
-
 type UploadRequest struct {
 	Bucket string
 	Key    string
-	Body   os.File
+	Body   []byte
 }
 
 type UploadResponse struct {

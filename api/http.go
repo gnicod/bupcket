@@ -1,8 +1,8 @@
 package api
 
 import (
+	"io/ioutil"
 	"log"
-	"os"
 
 	"github.com/gnicod/bupcket/api/error"
 	"github.com/gnicod/bupcket/config"
@@ -29,8 +29,15 @@ func NewApp(storageProvider storage.Provider, config config.Config) *App {
 }
 
 func (app *App) Upload(ctx iris.Context) {
-	_, info, err := ctx.FormFile("file")
+	ff, info, err := ctx.FormFile("file")
 	tag := ctx.URLParam("tag")
+	if err != nil {
+		ctx.StatusCode(iris.StatusBadRequest)
+		ctx.JSON(error.MISSING_FILE)
+		return
+	}
+	fileBytes, err := ioutil.ReadAll(ff)
+	// write this byte array to our temporary file
 	if err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(error.MISSING_FILE)
@@ -41,9 +48,7 @@ func (app *App) Upload(ctx iris.Context) {
 		ctx.JSON(error.CONFIG_NOT_FOUND)
 		return
 	}
-	f, _ := os.Open(info.Filename)
 	mt := info.Header.Get("Content-Type")
-	defer f.Close()
 	tg, err := app.config.GetTagConfig(tag)
 	if err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
@@ -57,7 +62,7 @@ func (app *App) Upload(ctx iris.Context) {
 	response, err := app.storageProvider.Upload(storage.UploadRequest{
 		Bucket: tg.Bucket,
 		Key:    uuid.NewString(),
-		Body:   *f,
+		Body:   fileBytes,
 	})
 	if err != nil {
 		ctx.JSON(error.CONFIG_NOT_FOUND)

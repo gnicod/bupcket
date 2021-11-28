@@ -1,7 +1,9 @@
 package storage
 
 import (
+	"bytes"
 	"log"
+	"net/http"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -17,10 +19,10 @@ func (s S3Provider) Upload(request UploadRequest) (UploadResponse, error) {
 		Bucket:             aws.String(request.Bucket),
 		Key:                aws.String(request.Key),
 		ACL:                aws.String("public-read"),
-		Body:               &request.Body, // bytes.NewReader(buffer),
+		Body:               bytes.NewReader(request.Body),
 		ContentDisposition: aws.String("attachment"),
-		// ContentLength:      aws.Int64(int64(len(buffer))),
-		// ContentType:        aws.String(http.DetectContentType(buffer)),
+		ContentLength:      aws.Int64(int64(len(request.Body))),
+		ContentType:        aws.String(http.DetectContentType(request.Body)),
 		// ServerSideEncryption: aws.String("AES256"),
 	})
 	response := UploadResponse{
