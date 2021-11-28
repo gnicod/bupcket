@@ -20,6 +20,7 @@ import (
 	"os"
 
 	"github.com/gnicod/bupcket/api"
+	"github.com/gnicod/bupcket/config"
 	"github.com/gnicod/bupcket/storage"
 
 	"github.com/spf13/cobra"
@@ -48,7 +49,7 @@ to quickly create a Cobra application.`,
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	cobra.CheckErr(rootCmd.Execute())
-	app := api.NewApp(storage.NewS3Provider())
+	app := api.NewApp(storage.NewS3Provider(), config.GetConfig())
 	app.Run()
 }
 

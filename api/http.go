@@ -13,13 +13,15 @@ import (
 )
 
 type App struct {
+	config 			config.Config
 	router          *iris.Application
 	storageProvider storage.Provider
 }
 
-func NewApp(storageProvider storage.Provider) *App {
+func NewApp(storageProvider storage.Provider, config config.Config) *App {
 	router := iris.New()
 	app := &App{
+		config: config,
 		router:          router,
 		storageProvider: storageProvider,
 	}
@@ -34,7 +36,6 @@ func (app *App) Upload(ctx iris.Context) {
 		ctx.JSON(error.MISSING_FILE)
 		return
 	}
-	config, err := config.NewTagConfig(tag)
 	if err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(error.CONFIG_NOT_FOUND)
@@ -42,8 +43,14 @@ func (app *App) Upload(ctx iris.Context) {
 	}
 	f, _ := os.Open(info.Filename)
 	defer f.Close()
+	tg, err := app.config.GetTagConfig(tag)
+	if err != nil {
+		ctx.StatusCode(iris.StatusBadRequest)
+		ctx.JSON(error.CONFIG_NOT_FOUND)
+		return
+	}
 	response, err := app.storageProvider.Upload(storage.UploadRequest{
-		Bucket: config.Bucket,
+		Bucket: tg.Bucket,
 		Key:    uuid.NewString(),
 		Body:   *f,
 	})
