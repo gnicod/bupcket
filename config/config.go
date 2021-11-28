@@ -13,7 +13,6 @@ type Tag struct{
 type Config struct {
 	Tags map[string]Tag `mapstructure:"tags"`
 	Name string `string:"name"`
-	Tag Tag `mapstructure:"tag"`
 }
 
 func (cfg *Config) GetTagConfig(tag string) (Tag, error) {
