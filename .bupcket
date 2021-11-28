@@ -1,0 +1,13 @@
+---
+tags:
+  audio:
+    bucket: walkguide
+    mimetypes:
+      - audio/mpeg
+      - audio/mp3
+  img:
+    bucket: walkguide
+    mimetypes:
+      - image/jpeg
+      - image/gif
+      - image/png
