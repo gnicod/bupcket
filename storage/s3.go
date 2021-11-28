@@ -2,6 +2,7 @@ package storage
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -15,9 +16,13 @@ type S3Provider struct {
 }
 
 func (s S3Provider) Upload(request UploadRequest) (UploadResponse, error) {
+	fullPath := request.Key
+	if request.Folder != "" {
+		fullPath = fmt.Sprintf("%s/%s", request.Folder, fullPath)
+	}
 	_, err := s3.New(s.session).PutObject(&s3.PutObjectInput{
 		Bucket:             aws.String(request.Bucket),
-		Key:                aws.String(request.Key),
+		Key:                aws.String(fullPath),
 		ACL:                aws.String("public-read"),
 		Body:               bytes.NewReader(request.Body),
 		ContentDisposition: aws.String("attachment"),
@@ -26,7 +31,7 @@ func (s S3Provider) Upload(request UploadRequest) (UploadResponse, error) {
 		// ServerSideEncryption: aws.String("AES256"),
 	})
 	response := UploadResponse{
-		Path: "https://" + request.Bucket + ".s3.eu-west-3.amazonaws.com/" + request.Key,
+		Path: "https://" + request.Bucket + ".s3.eu-west-3.amazonaws.com/" + fullPath,
 	}
 	return response, err
 }

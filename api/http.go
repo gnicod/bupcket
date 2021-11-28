@@ -61,6 +61,7 @@ func (app *App) Upload(ctx iris.Context) {
 	}
 	response, err := app.storageProvider.Upload(storage.UploadRequest{
 		Bucket: tg.Bucket,
+		Folder: tg.Folder,
 		Key:    uuid.NewString(),
 		Body:   fileBytes,
 	})

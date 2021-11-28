@@ -2,6 +2,7 @@ package storage
 
 type UploadRequest struct {
 	Bucket string
+	Folder string
 	Key    string
 	Body   []byte
 }

@@ -8,6 +8,7 @@ import (
 
 type Tag struct{
 	Bucket string `mapstructure:"bucket"`
+	Folder string `mapstructure:"folder"`
 	MimeTypes []string `mapstructure:"mimetypes"`
 }
 
