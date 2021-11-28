@@ -8,6 +8,19 @@ import (
 
 type Tag struct{
 	Bucket string `mapstructure:"bucket"`
+	MimeTypes []string `mapstructure:"mimetypes"`
+}
+
+func (t *Tag) AcceptMimeType(mimeType string) bool {
+	if len(t.MimeTypes) == 0 {
+		return true
+	}
+	for _, a := range t.MimeTypes {
+        if a == mimeType {
+            return true
+        }
+    }
+    return false
 }
 
 type Config struct {

@@ -49,7 +49,8 @@ to quickly create a Cobra application.`,
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	cobra.CheckErr(rootCmd.Execute())
-	app := api.NewApp(storage.NewS3Provider(), config.GetConfig())
+	c:= config.GetConfig()
+	app := api.NewApp(storage.NewS3Provider(), c)
 	app.Run()
 }
 

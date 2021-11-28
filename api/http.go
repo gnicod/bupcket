@@ -42,11 +42,16 @@ func (app *App) Upload(ctx iris.Context) {
 		return
 	}
 	f, _ := os.Open(info.Filename)
+	mt := info.Header.Get("Content-Type")
 	defer f.Close()
 	tg, err := app.config.GetTagConfig(tag)
 	if err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(error.CONFIG_NOT_FOUND)
+		return
+	}
+	if !tg.AcceptMimeType(mt) {
+		ctx.JSON(error.INVALID_MIME_TYPE)
 		return
 	}
 	response, err := app.storageProvider.Upload(storage.UploadRequest{

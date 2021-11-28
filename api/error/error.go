@@ -13,3 +13,7 @@ var CONFIG_NOT_FOUND = ErrorResponse{
 	Code:    100,
 	Message: "Config not found",
 }
+var INVALID_MIME_TYPE = ErrorResponse{
+	Code:    100,
+	Message: "Invalid MimeTypes",
+}
