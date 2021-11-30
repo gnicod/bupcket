@@ -1,12 +1,18 @@
-FROM golang
+FROM golang:1.17-alpine
 
+RUN apk add --no-cache git
 
-WORKDIR /app
+WORKDIR /app/bupcket
 
-COPY go.mod ./
-COPY go.sum ./
-WORKDIR /app
+COPY go.mod .
+COPY go.sum .
+
 RUN go mod download
-CMD [ "go", "run", "main.go" ]
+
+COPY . .
+
+RUN go build -o ./out/bupcket .
 
 EXPOSE 8090
+
+CMD ["./out/bupcket", "server"]
